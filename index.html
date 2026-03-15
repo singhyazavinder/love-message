@@ -9,32 +9,51 @@
 <body>
     <div class="heart-bg" id="heart-bg"></div>
 
-    <!-- Game Screen -->
-    <main class="game-container" id="game-container">
-        <div class="instruction-box">
-            <h2 id="instruction">Click the heart to see how much I love you...</h2>
+    <!-- Stage 1: The Invitation (Sealed Letter) -->
+    <section id="stage-intro" class="stage">
+        <div class="envelope-wrapper" id="envelope">
+            <div class="envelope">
+                <div class="letter">
+                    <p>I have a special secret for you...</p>
+                    <button class="btn-open" id="open-letter">Open It ❤️</button>
+                </div>
+            </div>
+            <div class="heart-seal" id="heart-seal">❤️</div>
         </div>
-        
+        <h2 class="invitation-text">A little something for the girl who has my heart...</h2>
+    </section>
+
+    <!-- Stage 2: Catch the Feelings Minigame -->
+    <section id="stage-game" class="stage hidden-stage">
+        <div class="game-ui">
+            <h2 id="game-instruction">Catch the hearts to fill our love!</h2>
+            <div class="progress-container">
+                <div id="game-progress" class="progress-fill"></div>
+            </div>
+            <p id="game-score">Love Captured: 0%</p>
+        </div>
+        <div id="game-canvas"></div>
+    </section>
+
+    <!-- Stage 3: The Big Reveal -->
+    <section id="stage-reveal" class="stage hidden-stage">
         <div class="heart-wrapper">
             <div id="main-heart" class="main-heart pulse">❤️</div>
         </div>
-
-        <div class="meter-container">
-            <div class="meter-bar">
-                <div id="meter-fill" class="meter-fill"></div>
-            </div>
-            <p id="love-status">Love Level: 0%</p>
+        <div class="instruction-box">
+            <p id="instruction">One final touch to reveal my heart...</p>
         </div>
-    </main>
+    </section>
 
-    <!-- Victory Screen -->
-    <div id="victory-screen" class="victory-screen hidden">
+    <!-- Victory Screen (Final Message) -->
+    <div id="victory-screen" class="victory-screen hidden-stage">
         <div class="victory-card">
             <h1>I Love You Forever!</h1>
             <div class="message-box">
                 <p id="revealed-text"></p>
             </div>
             <div class="floating-hearts-burst">💖✨🌸✨💖</div>
+            <button id="restart-btn" class="btn-restart">Relive the Magic ✨</button>
         </div>
     </div>
 

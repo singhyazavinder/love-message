@@ -1,44 +1,157 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const heartBg = document.getElementById('heart-bg');
+    // Stage Elements
+    const stages = {
+        intro: document.getElementById('stage-intro'),
+        game: document.getElementById('stage-game'),
+        reveal: document.getElementById('stage-reveal'),
+        victory: document.getElementById('victory-screen')
+    };
+
+    // Stage 1 Elements
+    const envelope = document.getElementById('envelope');
+    const openLetterBtn = document.getElementById('open-letter');
+
+    // Stage 2 Elements
+    const gameCanvas = document.getElementById('game-canvas');
+    const gameProgress = document.getElementById('game-progress');
+    const gameScore = document.getElementById('game-score');
+
+    // Stage 3 Elements
     const mainHeart = document.getElementById('main-heart');
-    const meterFill = document.getElementById('meter-fill');
-    const loveStatus = document.getElementById('love-status');
-    const gameContainer = document.getElementById('game-container');
-    const victoryScreen = document.getElementById('victory-screen');
     const revealedText = document.getElementById('revealed-text');
-    const instruction = document.getElementById('instruction');
+    const restartBtn = document.getElementById('restart-btn');
 
+    // State
     const loveMessage = "Every single day with you feels like a beautiful dream come true. You are my light, my heart, and my everything. I love you more than words can ever express. ❤️";
-
+    let progress = 0;
     let clickCount = 0;
-    const maxClicks = 4; // User requested 4 clicks
+    const maxClicks = 4;
     let heartScale = 1;
 
-    // Create floating hearts
-    function createHeart() {
-        const heart = document.createElement('div');
-        heart.classList.add('floating-heart');
-        heart.innerHTML = '❤️';
-        
-        const startX = Math.random() * 100;
-        const size = Math.random() * (30 - 15) + 15;
-        const duration = Math.random() * (15 - 5) + 5;
-        const delay = Math.random() * 5;
-
-        heart.style.left = `${startX}vw`;
-        heart.style.fontSize = `${size}px`;
-        heart.style.animationDuration = `${duration}s`;
-        heart.style.animationDelay = `${delay}s`;
-
-        heartBg.appendChild(heart);
-        setTimeout(() => heart.remove(), (duration + delay) * 1000);
+    // Helper: Show Stage
+    function showStage(stageKey) {
+        Object.keys(stages).forEach(key => {
+            if (key === stageKey) {
+                stages[key].classList.remove('hidden-stage');
+            } else {
+                stages[key].classList.add('hidden-stage');
+            }
+        });
     }
 
-    // Initial heart background
-    for (let i = 0; i < 15; i++) createHeart();
-    setInterval(createHeart, 1000);
+    // --- STAGE 1: INTRO ---
+    openLetterBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        envelope.classList.add('open');
+        setTimeout(() => {
+            showStage('game');
+            startMinigame();
+        }, 1500);
+    });
 
-    // Typing effect
+    // --- STAGE 2: MINIGAME ---
+    function startMinigame() {
+        const gameInterval = setInterval(() => {
+            if (progress >= 100) {
+                clearInterval(gameInterval);
+                setTimeout(() => showStage('reveal'), 1000);
+                return;
+            }
+            createFallingHeart();
+        }, 600);
+    }
+
+    function createFallingHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('falling-collectible');
+        heart.innerHTML = ['❤️', '💖', '✨', '🌸'][Math.floor(Math.random() * 4)];
+        
+        const startX = Math.random() * (window.innerWidth - 50);
+        heart.style.left = `${startX}px`;
+        heart.style.top = `-50px`;
+        
+        gameCanvas.appendChild(heart);
+
+        const duration = Math.random() * 2000 + 3000;
+        const animation = heart.animate([
+            { transform: `translateY(0) rotate(0deg)` },
+            { transform: `translateY(${window.innerHeight + 50}px) rotate(360deg)` }
+        ], {
+            duration: duration,
+            easing: 'linear'
+        });
+
+        heart.addEventListener('click', () => {
+            progress += 10;
+            if (progress > 100) progress = 100;
+            updateProgress();
+            
+            // Pop effect
+            heart.style.transform = 'scale(1.5)';
+            heart.style.opacity = '0';
+            setTimeout(() => heart.remove(), 200);
+        });
+
+        animation.onfinish = () => heart.remove();
+    }
+
+    function updateProgress() {
+        gameProgress.style.width = `${progress}%`;
+        gameScore.innerText = `Love Captured: ${progress}%`;
+    }
+
+    // --- STAGE 3: REVEAL ---
+    mainHeart.addEventListener('click', () => {
+        if (clickCount >= maxClicks) return;
+
+        clickCount++;
+        heartScale += 2.0; 
+        mainHeart.style.transform = `scale(${heartScale})`;
+
+        // Burst effect
+        for (let i = 0; i < 5; i++) createBurstHeart();
+
+        if (clickCount >= maxClicks) {
+            triggerVictory();
+        }
+    });
+
+    function createBurstHeart() {
+        const heart = document.createElement('div');
+        heart.innerHTML = '❤️';
+        heart.style.position = 'fixed';
+        heart.style.left = '50%';
+        heart.style.top = '50%';
+        heart.style.fontSize = '24px';
+        heart.style.pointerEvents = 'none';
+        document.body.appendChild(heart);
+
+        const angle = Math.random() * Math.PI * 2;
+        const dist = Math.random() * 200 + 100;
+        
+        heart.animate([
+            { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+            { transform: `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px)) scale(0)`, opacity: 0 }
+        ], {
+            duration: 1000,
+            easing: 'ease-out'
+        }).onfinish = () => heart.remove();
+    }
+
+    function triggerVictory() {
+        mainHeart.classList.remove('pulse');
+        mainHeart.style.transition = "transform 1.2s cubic-bezier(0.95, 0.05, 0.795, 0.035)";
+        mainHeart.style.transform = "scale(100)";
+        mainHeart.style.opacity = "0.1";
+
+        setTimeout(() => {
+            showStage('victory');
+            setTimeout(() => {
+                typeMessage(loveMessage, revealedText, 50);
+            }, 800);
+        }, 1000);
+    }
+
     function typeMessage(text, element, speed = 50) {
         let i = 0;
         element.innerHTML = "";
@@ -52,54 +165,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }, speed);
     }
 
-    // Click logic
-    mainHeart.addEventListener('click', () => {
-        if (clickCount >= maxClicks) return;
-
-        clickCount++;
-        
-        // Update scale (Explosive growth)
-        heartScale += 2.0; 
-        mainHeart.style.transform = `scale(${heartScale})`;
-        
-        // Update Meter
-        const percentage = Math.round((clickCount / maxClicks) * 100);
-        meterFill.style.width = `${percentage}%`;
-        loveStatus.innerText = `Love Level: ${percentage}%`;
-
-        // Instructions
-        if (clickCount === 1) instruction.innerText = "It's growing!";
-        if (clickCount === 2) instruction.innerText = "Almost there...";
-        if (clickCount === 3) instruction.innerText = "ONE MORE CLICK!";
-
-        // Burst of hearts
-        for (let i = 0; i < 8; i++) {
-            setTimeout(createHeart, Math.random() * 500);
-        }
-
-        // Victory condition
-        if (clickCount >= maxClicks) {
-            triggerVictory();
-        }
+    // Restart Logic
+    restartBtn.addEventListener('click', () => {
+        progress = 0;
+        clickCount = 0;
+        heartScale = 1;
+        updateProgress();
+        mainHeart.style.transform = `scale(1)`;
+        mainHeart.style.opacity = "1";
+        mainHeart.classList.add('pulse');
+        envelope.classList.remove('open');
+        showStage('intro');
     });
 
-    function triggerVictory() {
-        // Massive heart explode (covers screen)
-        mainHeart.classList.remove('pulse');
-        mainHeart.style.transition = "transform 1.2s cubic-bezier(0.95, 0.05, 0.795, 0.035)";
-        mainHeart.style.transform = "scale(100)";
-        mainHeart.style.opacity = "0.1";
+    // Background floating hearts (passive)
+    function createPassiveHeart() {
+        const heart = document.createElement('div');
+        heart.innerHTML = '❤️';
+        heart.style.position = 'fixed';
+        heart.style.bottom = '-50px';
+        heart.style.left = `${Math.random() * 100}vw`;
+        heart.style.fontSize = `${Math.random() * 20 + 10}px`;
+        heart.style.opacity = '0.3';
+        heart.style.pointerEvents = 'none';
+        heart.style.zIndex = '0';
+        document.body.appendChild(heart);
 
-        setTimeout(() => {
-            gameContainer.style.display = 'none';
-            victoryScreen.classList.add('show');
-            
-            setTimeout(() => {
-                typeMessage(loveMessage, revealedText, 50);
-            }, 800);
-        }, 1000);
-
-        // Constant heart bursts
-        setInterval(createHeart, 80);
+        heart.animate([
+            { transform: 'translateY(0) scale(1)', opacity: 0.3 },
+            { transform: `translateY(-${window.innerHeight + 100}px) scale(1.5)`, opacity: 0 }
+        ], {
+            duration: Math.random() * 5000 + 5000,
+            easing: 'linear'
+        }).onfinish = () => heart.remove();
     }
+
+    setInterval(createPassiveHeart, 1000);
 });
