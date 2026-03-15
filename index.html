@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grow My Love ❤️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="heart-bg" id="heart-bg"></div>
+
+    <!-- Game Screen -->
+    <main class="game-container" id="game-container">
+        <div class="instruction-box">
+            <h2 id="instruction">Click the heart to see how much I love you...</h2>
+        </div>
+        
+        <div class="heart-wrapper">
+            <div id="main-heart" class="main-heart pulse">❤️</div>
+        </div>
+
+        <div class="meter-container">
+            <div class="meter-bar">
+                <div id="meter-fill" class="meter-fill"></div>
+            </div>
+            <p id="love-status">Love Level: 0%</p>
+        </div>
+    </main>
+
+    <!-- Victory Screen -->
+    <div id="victory-screen" class="victory-screen hidden">
+        <div class="victory-card">
+            <h1>I Love You Forever!</h1>
+            <div class="message-box">
+                <p id="revealed-text"></p>
+            </div>
+            <div class="floating-hearts-burst">💖✨🌸✨💖</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

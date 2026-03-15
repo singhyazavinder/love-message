@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600&display=swap');
+
+:root {
+    --primary-red: #ff4d6d;
+    --soft-pink: #ffccd5;
+    --dark-crimson: #c9184a;
+    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --text-color: #4a1c2c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Background Elements */
+.heart-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.floating-heart {
+    position: absolute;
+    color: var(--primary-red);
+    opacity: 0.6;
+    animation: float linear infinite;
+    z-index: 0;
+}
+
+@keyframes float {
+    0% { transform: translateY(110vh) scale(0) rotate(0deg); opacity: 0; }
+    20% { opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1) rotate(360deg); opacity: 0; }
+}
+
+/* Game Layout */
+.game-container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.5s ease;
+}
+
+.instruction-box {
+    margin-bottom: 3vh;
+    background: var(--glass-bg);
+    backdrop-filter: blur(5px);
+    padding: 10px 25px;
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+}
+
+#instruction {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    font-weight: 400;
+}
+
+/* Heart Mechanics */
+.heart-wrapper {
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-heart {
+    font-size: 80px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
+    filter: drop-shadow(0 0 10px rgba(255, 77, 109, 0.3));
+}
+
+.main-heart:active {
+    transform: scale(0.9);
+}
+
+.main-heart.victory-scale {
+    transform: scale(50);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Meter */
+.meter-container {
+    width: 250px;
+    margin-top: 5vh;
+}
+
+.meter-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+}
+
+.meter-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(to right, var(--primary-red), var(--dark-crimson));
+    transition: width 0.3s ease;
+}
+
+#love-status {
+    margin-top: 10px;
+    font-weight: 600;
+    color: var(--dark-crimson);
+}
+
+/* Victory Screen */
+.victory-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--primary-red);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease;
+}
+
+.victory-screen.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.victory-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 50px;
+    border-radius: 30px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transform: translateY(20px);
+    transition: transform 0.8s ease;
+}
+
+.victory-screen.show .victory-card {
+    transform: translateY(0);
+}
+
+.victory-card h1 {
+    font-family: 'Dancing Script', cursive;
+    color: var(--dark-crimson);
+    font-size: 3.5rem;
+    margin-bottom: 25px;
+}
+
+#revealed-text {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Animations */
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@media (max-width: 480px) {
+    .victory-card h1 { font-size: 2.5rem; }
+}
