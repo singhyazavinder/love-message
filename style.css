@@ -96,41 +96,7 @@ body {
     transform: scale(0.9);
 }
 
-.main-heart.victory-scale {
-    transform: scale(50);
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* Meter */
-.meter-container {
-    width: 250px;
-    margin-top: 5vh;
-}
-
-.meter-bar {
-    width: 100%;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid var(--glass-border);
-}
-
-.meter-fill {
-    width: 0%;
-    height: 100%;
-    background: linear-gradient(to right, var(--primary-red), var(--dark-crimson));
-    transition: width 0.3s ease;
-}
-
-#love-status {
-    margin-top: 10px;
-    font-weight: 600;
-    color: var(--dark-crimson);
-}
-
-/* Victory Screen */
+/* Victory State */
 .victory-screen {
     position: absolute;
     top: 0;
@@ -183,6 +149,34 @@ body {
 
 .hidden {
     display: none !important;
+}
+
+/* Meter */
+.meter-container {
+    width: 250px;
+    margin-top: 5vh;
+}
+
+.meter-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+}
+
+.meter-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(to right, var(--primary-red), var(--dark-crimson));
+    transition: width 0.3s ease;
+}
+
+#love-status {
+    margin-top: 10px;
+    font-weight: 600;
+    color: var(--dark-crimson);
 }
 
 /* Animations */

@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loveMessage = "Every single day with you feels like a beautiful dream come true. You are my light, my heart, and my everything. I love you more than words can ever express. ❤️";
 
     let clickCount = 0;
-    const maxClicks = 15;
+    const maxClicks = 4; // User requested 4 clicks
     let heartScale = 1;
 
     // Create floating hearts
@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         clickCount++;
         
-        // Update scale
-        heartScale += 0.4;
+        // Update scale (Explosive growth)
+        heartScale += 2.0; 
         mainHeart.style.transform = `scale(${heartScale})`;
         
         // Update Meter
@@ -67,13 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
         meterFill.style.width = `${percentage}%`;
         loveStatus.innerText = `Love Level: ${percentage}%`;
 
-        // Instructions change
-        if (clickCount === 5) instruction.innerText = "Wow, it's growing! Don't stop...";
-        if (clickCount === 10) instruction.innerText = "Can you feel the love? Keep clicking!";
-        if (clickCount === 14) instruction.innerText = "ONE MORE CLICK...";
+        // Instructions
+        if (clickCount === 1) instruction.innerText = "It's growing!";
+        if (clickCount === 2) instruction.innerText = "Almost there...";
+        if (clickCount === 3) instruction.innerText = "ONE MORE CLICK!";
 
-        // Burst of hearts on each click
-        for (let i = 0; i < 5; i++) {
+        // Burst of hearts
+        for (let i = 0; i < 8; i++) {
             setTimeout(createHeart, Math.random() * 500);
         }
 
@@ -84,14 +84,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function triggerVictory() {
-        // Massive heart scale up
+        // Massive heart explode (covers screen)
         mainHeart.classList.remove('pulse');
-        mainHeart.style.transition = "transform 1.5s cubic-bezier(0.95, 0.05, 0.795, 0.035)";
-        mainHeart.style.transform = "scale(80)";
-        mainHeart.style.opacity = "0.2";
+        mainHeart.style.transition = "transform 1.2s cubic-bezier(0.95, 0.05, 0.795, 0.035)";
+        mainHeart.style.transform = "scale(100)";
+        mainHeart.style.opacity = "0.1";
 
         setTimeout(() => {
-            gameContainer.classList.add('hidden');
+            gameContainer.style.display = 'none';
             victoryScreen.classList.add('show');
             
             setTimeout(() => {
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 800);
         }, 1000);
 
-        // Exploding heart density
-        setInterval(createHeart, 100);
+        // Constant heart bursts
+        setInterval(createHeart, 80);
     }
 });
